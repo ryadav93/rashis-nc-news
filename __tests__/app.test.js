@@ -25,15 +25,18 @@ describe('/api/topics', () => {
             })
         })
     })
-    test('GET: 404 status code and error message when given wrongly spelt endpoint', () => {
+    test('GET: 404 status code and error message when given wrongly spelt endpoint or invalid endpoint', () => {
         return request(app)
         .get('/api/toooopicss')
         .expect(404)
+        .then((response) => {
+        expect(response.body.msg).toBe('path not found');
+          });
+        
     })
     test('GET: 404 status code and error message when given an invalid endpoint', () => {
         return request(app)
         .get('/api/meat')
-        .expect(404)
         .then((response) => {
         expect(response.body.msg).toBe('path not found');
       });
