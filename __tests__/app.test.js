@@ -112,3 +112,39 @@ describe('/api/articles', () => {
       })
   })
 })
+describe('/api/articles/:article_id/comments', () => {
+  test('GET: 200 sends array of all comments from a single article to the client', () => {
+      return request(app)
+      .get("/api/articles/3/comments")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.comments.length).toBe(2);
+        body.comments.forEach((comment) => {
+          expect(comment.article_id).toBe(3);
+          expect(typeof comment.comment_id).toBe('number');
+          expect(typeof comment.votes).toBe('number');
+          expect(typeof comment.created_at).toBe('string');
+          expect(typeof comment.author).toBe('string');
+          expect(typeof comment.body).toBe('string');
+          expect(body.comments).toBeSortedBy('created_at', { descending: true })
+      })
+  })
+})
+test('GET:404 sends an appropriate status and error message when given a valid but non-existent id', () => {
+  return request(app)
+    .get('/api/articles/999/comments')
+    .expect(404)
+    .then((response) => {
+      expect(response.body.msg).toBe('article does not exist');
+    });
+});
+test('GET:400 responds with an appropriate error message when given an invalid id', () => {
+  return request(app)
+    .get('/api/articles/not-an-id/comments')
+    .expect(400)
+    .then((response) => {
+      expect(response.body.msg).toBe('Bad request');
+    });
+});
+});
+
