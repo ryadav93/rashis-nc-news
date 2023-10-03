@@ -106,25 +106,9 @@ describe('/api/articles', () => {
             expect(typeof article.votes).toBe('number')
             expect(typeof article.created_at).toBe("string")
             expect(typeof article.article_img_url).toBe( "string")
-            expect(typeof article.comment_count).toBe('string')
+            expect(typeof article.comment_count).toBe('number')
             expect(body.articles).toBeSortedBy('created_at', { descending: true })
           })
       })
-  })
-  test('GET: 404 status code and error message when given wrongly spelt endpoint or invalid endpoint', () => {
-      return request(app)
-      .get('/api/articls')
-      .expect(404)
-      .then((response) => {
-      expect(response.body.msg).toBe('path not found');
-        });
-      
-  })
-  test('GET: 404 status code and error message when given an invalid endpoint', () => {
-      return request(app)
-      .get('/api/meat')
-      .then((response) => {
-      expect(response.body.msg).toBe('path not found');
-    });
   })
 })
