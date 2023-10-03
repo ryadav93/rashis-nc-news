@@ -4,6 +4,7 @@ const request = require("supertest");
 const seed = require("../db/seeds/seed.js");
 const data = require("../db/data/test-data/index.js");
 const endpoints = require('../endpoints.json')
+const sorted = require('jest-sorted')
 
 beforeEach(() => {
   return seed(data);
@@ -88,4 +89,26 @@ describe('/api/articles/:article_id', () => {
             expect(response.body.msg).toBe('Bad request');
           });
       });
+})
+
+describe('/api/articles', () => {
+  test('GET: 200 status code and sends an array of article objects sorted by date to the client in descending order with a comment count', () => {
+      return request(app)
+      .get('/api/articles')
+      .expect(200)
+      .then(({ body }) => {
+          expect(body.articles.length).toBe(13)
+          body.articles.forEach((article) => {
+            expect(typeof article.author).toBe("string")
+            expect(typeof article.article_id).toBe('number')
+            expect(typeof article.title).toBe("string")
+            expect(typeof article.topic).toBe("string")
+            expect(typeof article.votes).toBe('number')
+            expect(typeof article.created_at).toBe("string")
+            expect(typeof article.article_img_url).toBe( "string")
+            expect(typeof article.comment_count).toBe('number')
+            expect(body.articles).toBeSortedBy('created_at', { descending: true })
+          })
+      })
+  })
 })
