@@ -13,6 +13,7 @@ exports.getArticleById = (req, res, next) => {
     selectArticleById(article_id).then((article) => {
         res.status(200).send({ article })
     }).catch((err) => {
+        console.log(err.code)
         next(err)
       })
 }
