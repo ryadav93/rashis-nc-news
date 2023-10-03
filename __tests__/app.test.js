@@ -3,6 +3,7 @@ const app = require("../db/app.js");
 const request = require("supertest");
 const seed = require("../db/seeds/seed.js");
 const data = require("../db/data/test-data/index.js");
+const endpoints = require('../endpoints.json')
 
 beforeEach(() => {
   return seed(data);
@@ -43,15 +44,17 @@ describe('/api/topics', () => {
     })
 })
 
+describe('/api', () => {
+    test('GET: /api returns an object of objects with information about all the available endpoints', () => {
+        return request(app)
+        .get('/api')
+        .expect(200)
+        .then((response) => {
+            expect(response.body.endpoints).toEqual(endpoints)
+        })
+    })
 
-
-
-
-
-
-
-
-
+})
 
 describe('/api/articles/:article_id', () => {
     test('GET: 200 sends a single article object to the client', () => {
