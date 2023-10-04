@@ -40,11 +40,19 @@ exports.selectArticleById = (article_id) => {
       article_id
     ])
     .then((result) => {
-    
-
       return result.rows;
      }
     )
 
   }
     
+  // exports.insertComment = ({ username, body }) => {
+   
+  // // return db
+  // //   .query(`INSERT INTO comments (body) VALUES ($1) RETURNING *;`, [username, body])
+  // //   .then((result) => {
+  // //     console.log(result.rows)
+  // //     return result.rows[0];
+      
+  // //   });
+  //  }

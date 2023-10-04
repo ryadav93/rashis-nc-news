@@ -161,3 +161,21 @@ test('GET: 200 sends an empty array if article exists but has no comments', () =
     expect(body.comments).toEqual([])
   })
 })
+// test('POST: 201 adds a new comment to the article which is an object', () => {
+//   const newComment = {
+//     body: 'my new comment',
+//     username: 'icellusedkars'}
+//   return request(app)
+//   .post("/api/articles/13/comments")
+//   .send(newComment)
+//   .expect(201)
+//   .then(({ body }) => {
+//     expect(body.comment).toMatchObject({body: 'my new comment', 
+//       comment_id: expect.any(Number),
+//       article_id: 13,
+//       author: 'icellusedkars',
+//       votes: 0,
+//       created_at: expect.any(String)})
+
+//})
+//})

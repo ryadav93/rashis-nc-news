@@ -1,4 +1,4 @@
-const { selectTopics, selectArticleById, selectArticles, selectCommentsByArticleId } = require('../model/model.js')
+const { selectTopics, selectArticleById, selectArticles, selectCommentsByArticleId, insertComment } = require('../model/model.js')
 const endpoints = require('../../endpoints.json')
 
 exports.getTopics = (req, res, next) => {
@@ -41,3 +41,10 @@ return selectCommentsByArticleId(article_id)
       next(err)
     })
   };
+
+exports.postComment = (req, res) => {
+    const newComment = req.body
+    insertComment(newComment).then((comment) => {
+        res.status(201).send({ comment });
+  })
+}
