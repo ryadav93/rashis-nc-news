@@ -1,5 +1,5 @@
 const express = require("express");
-const { getTopics, getApi, getArticleById, getArticles, getCommentsByArticleId } = require("./controller/controller.js");
+const { getTopics, getApi, getArticleById, getArticles, getCommentsByArticleId, deleteCommentById } = require("./controller/controller.js");
 const app = express();
 
 app.get("/api/topics", getTopics);
@@ -10,6 +10,10 @@ app.get('/api', getApi)
 app.get('/api/articles', getArticles)
 
 app.get("/api/articles/:article_id/comments", getCommentsByArticleId )
+
+
+
+app.delete('/api/comments/:comment_id', deleteCommentById)
 
 app.all('/api/*', (req, res, next) => {
     res.status(404).send({ msg: 'path not found'})
