@@ -148,7 +148,6 @@ test('GET:400 responds with an appropriate error message when given an invalid i
     .get('/api/articles/not-an-id/comments')
     .expect(400)
     .then((response) => {
-      console.log(response)
       expect(response.body.msg).toBe('Bad request');
     });
 });
@@ -158,7 +157,6 @@ test('GET: 200 sends an empty array if article exists but has no comments', () =
   .get("/api/articles/13/comments")
   .expect(200)
   .then(({ body }) => {
-    console.log(body)
     expect(body.comments.length).toBe(0);
     expect(body.comments).toEqual([])
   })
