@@ -112,3 +112,52 @@ describe('/api/articles', () => {
       })
   })
 })
+describe('/api/articles/:article_id/comments', () => {
+  test('GET: 200 sends array of all comments from a single article to the client', () => {
+      return request(app)
+      .get("/api/articles/3/comments")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.comments.length).toBe(2);
+        expect(body.comments[0]).toMatchObject({comment_id: 11,
+          body: 'Ambidextrous marsupial',
+          article_id: 3,
+          author: 'icellusedkars',
+          votes: 0,
+          created_at: '2020-09-19T23:10:00.000Z'})
+        expect(body.comments[1]).toMatchObject({comment_id: 10,
+          body: 'git push origin master',
+          article_id: 3,
+          author: 'icellusedkars',
+          votes: 0,
+          created_at: '2020-06-20T07:24:00.000Z'})
+        expect(body.comments).toBeSortedBy('created_at', { descending: true })
+      
+  })
+})
+test('GET:404 sends an appropriate status and error message when given a valid but non-existent id', () => {
+  return request(app)
+    .get('/api/articles/999/comments')
+    .expect(404)
+    .then((response) => {
+      expect(response.body.msg).toBe('article does not exist');
+    });
+});
+test('GET:400 responds with an appropriate error message when given an invalid id', () => {
+  return request(app)
+    .get('/api/articles/not-an-id/comments')
+    .expect(400)
+    .then((response) => {
+      expect(response.body.msg).toBe('Bad request');
+    });
+});
+});
+test('GET: 200 sends an empty array if article exists but has no comments', () => {
+  return request(app)
+  .get("/api/articles/13/comments")
+  .expect(200)
+  .then(({ body }) => {
+    expect(body.comments.length).toBe(0);
+    expect(body.comments).toEqual([])
+  })
+})
