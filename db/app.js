@@ -1,6 +1,8 @@
 const express = require("express");
-const { getTopics, getApi, getArticleById, getArticles, getCommentsByArticleId, deleteCommentById, getUsers } = require("./controller/controller.js");
+const { getTopics, getApi, getArticleById, getArticles, getCommentsByArticleId, deleteCommentById, getUsers, postComment } = require("./controller/controller.js");
 const app = express();
+
+app.use(express.json())
 
 app.get("/api/topics", getTopics);
 
@@ -16,7 +18,7 @@ app.delete('/api/comments/:comment_id', deleteCommentById)
 
 app.get('/api/users', getUsers)
 
-
+app.post("/api/articles/:article_id/comments", postComment)
 
 app.all('/api/*', (req, res, next) => {
     res.status(404).send({ msg: 'path not found'})
@@ -31,7 +33,7 @@ app.all('/api/*', (req, res, next) => {
      })
   
 app.use((err, req, res, next) => {
-  if(err.code === '22P02') {
+  if(err.code === '22P02' || '23502') {
     res.status(400).send({ msg: 'Bad request'})
   } else {
     next(err)
