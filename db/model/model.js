@@ -48,17 +48,6 @@ exports.selectArticleById = (article_id) => {
 
   }
     
-
-
-
-
-
-
-
-
-
-
-
   exports.removeComment = (comment_id) => {
     return db.query('SELECT * FROM comments WHERE comments.comment_id = $1;', [comment_id])
   .then((result)=> {
@@ -69,3 +58,20 @@ exports.selectArticleById = (article_id) => {
     }
   })
   }
+    
+
+  exports.selectUsers = () => {
+    return db.query('SELECT * FROM users;').then((result) => {
+        return result.rows;
+      });
+}
+
+
+
+
+
+
+
+
+
+
