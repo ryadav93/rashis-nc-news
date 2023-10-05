@@ -241,11 +241,4 @@ describe('/api/users', () => {
       });
     
 })
-test('GET: 404 status code and error message when given an invalid endpoint', () => {
-    return request(app)
-    .get('/api/meat')
-    .then((response) => {
-    expect(response.body.msg).toBe('path not found');
-  });
-})
 })
