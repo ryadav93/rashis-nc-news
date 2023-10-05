@@ -160,6 +160,71 @@ test('GET: 200 sends an empty array if article exists but has no comments', () =
     expect(body.comments.length).toBe(0);
     expect(body.comments).toEqual([])
   })
+  
+})
+
+describe('/api/comments/:comment_id', () => {
+  test('DELETE: 204 deletes specific comment and sends no content back', () => {
+    return request(app).delete('/api/comments/3').expect(204)
+  })
+  test('DELETE:404 responds with an appropriate status and error message when given a non-existent id', () => {
+    return request(app)
+      .delete('/api/comments/999')
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe('comment does not exist');
+      });
+  });
+  test('DELETE:400 responds with an appropriate status and error message when given an invalid id', () => {
+    return request(app)
+      .delete('/api/comments/not-an-id')
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe('Bad request');
+      })
+})
+})
+
+describe('/api/users', () => {
+  test('GET: 200 sends an array of objects of all the users', () => {
+    return request(app)
+    .get('/api/users')
+    .expect(200)
+    .then(({ body }) => {
+      expect(body.users.length).toBe(4)
+      expect(body.users[0]).toMatchObject({
+        username: 'butter_bridge',
+        name: 'jonny',
+        avatar_url:
+          'https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg'
+      })
+      expect(body.users[1]).toMatchObject({
+        username: 'icellusedkars',
+        name: 'sam',
+        avatar_url: 'https://avatars2.githubusercontent.com/u/24604688?s=460&v=4'
+      })
+      expect(body.users[2]).toMatchObject({
+        username: 'rogersop',
+        name: 'paul',
+        avatar_url: 'https://avatars2.githubusercontent.com/u/24394918?s=400&v=4'
+      })
+      expect(body.users[3]).toMatchObject({
+        username: 'lurker',
+        name: 'do_nothing',
+        avatar_url:
+          'https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png'
+      })
+    })
+  })
+  test('GET: 404 status code and error message when given wrongly spelt endpoint or invalid endpoint', () => {
+    return request(app)
+    .get('/api/usrs')
+    .expect(404)
+    .then((response) => {
+    expect(response.body.msg).toBe('path not found');
+      });
+    
+})
 })
 test('POST: 201 adds a new comment to the article which is an object', () => {
   const newComment = {
