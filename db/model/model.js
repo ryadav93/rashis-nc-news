@@ -71,16 +71,6 @@ exports.selectArticleById = (article_id) => {
     })
   }
 
-
-
-
-
-
-
-
-
-
-
   exports.insertComment = ({ username, body }, article_id) => {
 
    return db
