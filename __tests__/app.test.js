@@ -89,6 +89,83 @@ describe('/api/articles/:article_id', () => {
             expect(response.body.msg).toBe('Bad request');
           });
       });
+      test('PATCH: 200 responds with updated article when incremented by certain number of votes', () => {
+        const articleUpdate = { inc_votes: 1 }
+        return request(app)
+        .patch('/api/articles/1')
+        .send(articleUpdate)
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.article).toMatchObject({title: "Living in the shadow of a great man",
+          topic: "mitch",
+          author: "butter_bridge",
+          body: "I find this existence challenging",
+          created_at: expect.any(String),
+          votes: 101,
+          article_img_url:
+            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"})
+        })
+      })
+      test('PATCH: 200 responds with updated article when decremented by certain number of votes', () => {
+        const articleUpdate = { inc_votes: -100 }
+        return request(app)
+        .patch('/api/articles/1')
+        .send(articleUpdate)
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.article).toMatchObject({title: "Living in the shadow of a great man",
+          topic: "mitch",
+          author: "butter_bridge",
+          body: "I find this existence challenging",
+          created_at: expect.any(String),
+          votes: 0,
+          article_img_url:
+            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"})
+        })
+      })
+      test('PATCH: 400 for missing votes', () => {
+        const articleUpdate = {}
+        return request(app)
+        .patch('/api/articles/1')
+        .send(articleUpdate)
+        .expect(400)
+        .then((response) => {
+          console.log(response.body)
+          expect(response.body.msg).toBe('Bad request');
+        });
+
+      })
+      test('PATCH: 400 if votes is not a number', () => {
+        const articleUpdate = {inc_votes: 'banana'}
+        return request(app)
+        .patch('/api/articles/1')
+        .send(articleUpdate)
+        .expect(400)
+        .then((response) => {
+          expect(response.body.msg).toBe('Bad request');
+        });
+
+      })
+      test('PATCH:404 sends an appropriate status and error message when given a valid but non-existent id', () => {
+        const articleUpdate = { inc_votes: -100 }
+        return request(app)
+          .patch('/api/articles/999')
+          .send(articleUpdate)
+          .expect(404)
+          .then((response) => {
+            expect(response.body.msg).toBe('article does not exist');
+          });
+      });
+      test('PATCH:400 sends an appropriate status and error message when given an invalid id', () => {
+        const articleUpdate = { inc_votes: -100 }
+        return request(app)
+          .patch('/api/articles/not-an-article')
+          .send(articleUpdate)
+          .expect(400)
+          .then((response) => {
+            expect(response.body.msg).toBe('Bad request');
+          });
+      });
 
 
 
