@@ -42,9 +42,41 @@ return selectCommentsByArticleId(article_id)
     })
   };
 
-exports.postComment = (req, res) => {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  exports.postComment = (req, res, next) => {
     const newComment = req.body
-    insertComment(newComment).then((comment) => {
+    const { article_id } = req.params
+   insertComment(newComment, article_id).then((comment) => {
         res.status(201).send({ comment });
+}).catch((err) => {
+  
+    next(err)
+   
   })
 }
+
