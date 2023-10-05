@@ -71,8 +71,11 @@ return selectCommentsByArticleId(article_id)
   exports.postComment = (req, res, next) => {
     const newComment = req.body
     const { article_id } = req.params
-   insertComment(newComment, article_id).then((comment) => {
-        res.status(201).send({ comment });
+    selectArticleById(article_id).then(() => {
+       return insertComment(newComment, article_id).
+       then((comment) => {
+            res.status(201).send({ comment });
+    })  
 }).catch((err) => {
   
     next(err)

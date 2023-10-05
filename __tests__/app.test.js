@@ -189,16 +189,16 @@ test('POST:400 responds with an appropriate status and error message when provid
       expect(response.body.msg).toBe('Bad request');
     });
 });
-test('POST:400 sends an appropriate status and error message when given a valid but non-existent id', () => {
+test('POST:404 sends an appropriate status and error message when given a valid but non-existent id', () => {
   const newComment = {
     body: 'my new comment',
     username: 'icellusedkars'}
   return request(app)
     .post('/api/articles/999/comments')
     .send(newComment)
-    .expect(400)
+    .expect(404)
     .then((response) => {
-      expect(response.body.msg).toBe('Bad request');
+      expect(response.body.msg).toBe('article does not exist');
     });
 })
 test('POST:400 responds with an appropriate status and error message when provided with incorrect username)', () => {
@@ -208,7 +208,6 @@ test('POST:400 responds with an appropriate status and error message when provid
     .send(newComment)
     .expect(400)
     .then((response) => {
-      console.log(response)
       expect(response.body.msg).toBe('Bad request');
     });
   })
@@ -221,7 +220,6 @@ test('POST:400 responds with an appropriate status and error message when provid
       .send(newComment)
       .expect(400)
       .then((response) => {
-        console.log(response)
         expect(response.body.msg).toBe('Bad request');
       });
     })
