@@ -189,6 +189,7 @@ describe('/api/articles', () => {
       })
   })
 })
+
 describe('/api/articles/:article_id/comments', () => {
   test('GET: 200 sends array of all comments from a single article to the client', () => {
       return request(app)
@@ -425,5 +426,33 @@ describe('/api/articles/?=:topic)', () => {
       })
   })
 
+  })
+})
+
+describe('/api/articles/:article_id(comment_count)', () => {
+  test('GET 200: response object now includes total number of comments for article_id', () => {
+    return request(app)
+        .get("/api/articles/3")
+        .expect(200)
+        .then((response) => {
+            expect(response.body.article.article_id).toBe(3)
+            expect(response.body.article.author).toBe("icellusedkars")
+            expect(response.body.article.title).toBe("Eight pug gifs that remind me of mitch")
+            expect(response.body.article.body).toBe("some gifs")
+            expect(response.body.article.topic).toBe("mitch")
+            expect(response.body.article.votes).toBe(0)
+            expect(response.body.article.created_at).toBe("2020-11-03T09:12:00.000Z")
+            expect(response.body.article.article_img_url).toBe( "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700")
+            expect(response.body.article.comment_count).toBe(21)
+        })
+  })
+  test('GET 200: Comment count has default value of 0 if no comments', () => {
+    return request(app)
+    .get("/api/articles/13")
+    .expect(200)
+    .then((response) => {
+      expect(response.body.article.article_id).toBe(13)
+      expect(response.body.article.comment_count).toBe(0)
+  })
   })
 })

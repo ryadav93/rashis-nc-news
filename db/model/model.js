@@ -9,7 +9,7 @@ exports.selectTopics = () => {
 
 exports.selectArticleById = (article_id) => {
     return db
-      .query('SELECT * FROM articles WHERE article_id = $1;', [article_id])
+      .query('SELECT *, CAST((SELECT COALESCE (SUM(comments.comment_id),0) FROM comments WHERE comments.article_id = articles.article_id) AS INT) AS comment_count FROM articles WHERE article_id = $1;', [article_id])
       .then((result) => {
         if(result.rows.length===0){
           return Promise.reject({ status: 404, msg: 'article does not exist' })
@@ -19,10 +19,10 @@ exports.selectArticleById = (article_id) => {
       });
     }
 
-    exports.selectArticles = (topic) => {
+  
 
-    
-     
+exports.selectArticles = (topic) => {
+
     let query = `SELECT articles.author, articles.article_id, articles.title, articles.topic, articles.votes, articles.created_at, articles.article_img_url, CAST(COUNT(comments.comment_id) AS INT) AS comment_count
      FROM articles 
      LEFT JOIN comments 
@@ -44,12 +44,7 @@ exports.selectArticleById = (article_id) => {
     return db
     .query(query, values)
     .then(({ rows }) => {
-      // if(rows.length===0){
-      //   return Promise.reject({ status: 404, msg: 'Topic not found' })
-      // } else {
       return rows;
-    
-    // }
     });
    }
 
