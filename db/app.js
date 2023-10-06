@@ -19,12 +19,14 @@ app.delete('/api/comments/:comment_id', deleteCommentById)
 app.get('/api/users', getUsers)
 
 app.post("/api/articles/:article_id/comments", postComment)
+
 app.patch("/api/articles/:article_id", updateArticle)
+
 app.all('/api/*', (req, res, next) => {
     res.status(404).send({ msg: 'path not found'})
   })
 
-  app.use((err, req, res, next) => {
+app.use((err, req, res, next) => {
     if(err.status){
      res.status(err.status).send({ msg: err.msg})
     } else {
