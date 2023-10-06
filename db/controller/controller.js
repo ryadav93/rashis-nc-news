@@ -26,7 +26,7 @@ exports.getArticles = (req, res, next) => {
     const { topic } = req.query
     const acceptedTopic = []
 
-     selectTopics(topic).then((result) => { 
+    selectTopics(topic).then((result) => { 
     result.forEach((res) => {
        return acceptedTopic.push(res.slug)
     })}).
