@@ -23,7 +23,18 @@ exports.getApi = (req, res) => {
 }
 
 exports.getArticles = (req, res, next) => {
-    selectArticles().then((articles) => {
+    const { topic } = req.query
+    const acceptedTopic = []
+
+     selectTopics(topic).then((result) => { 
+    result.forEach((res) => {
+       return acceptedTopic.push(res.slug)
+    })}).
+    then(() => {
+        if(!acceptedTopic.includes(topic) && topic) {
+           return res.status(404).send({msg: 'Topic not found'})
+        } })
+    selectArticles(topic).then((articles) => {
         res.status(200).send({ articles })
     }).catch((err) => {
         next(err)

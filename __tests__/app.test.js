@@ -365,3 +365,64 @@ describe('/api/users', () => {
     
 })
 })
+
+describe('/api/articles/?=:topic)', () => {
+  test('GET 200: returns with articles by certain topic', () => {
+    return request(app)
+    .get("/api/articles?topic=mitch")
+    .expect(200)
+    .then(({ body }) => {
+      expect(body.articles.length).toBe(12)
+          body.articles.forEach((article) => {
+            expect(typeof article.author).toBe("string")
+            expect(typeof article.article_id).toBe('number')
+            expect(typeof article.title).toBe("string")
+            expect(article.topic).toBe("mitch")
+            expect(typeof article.votes).toBe('number')
+            expect(typeof article.created_at).toBe("string")
+            expect(typeof article.article_img_url).toBe( "string")
+            expect(typeof article.comment_count).toBe('number')
+            expect(body.articles).toBeSortedBy('created_at', { descending: true })
+          })
+    })
+  })
+  test('GET 404: returns with error message if given wrongly spelt or invalid topic name', () => {
+    return request(app)
+    .get("/api/articles?topic=mitchell")
+    .expect(404)
+    .then((response) => {
+      expect(response.body.msg).toBe('Topic not found');
+    });
+
+  })
+  test('GET 200: returns with empty array if valid topic but no articles', () => {
+    return request(app)
+    .get("/api/articles?topic=paper")
+    .expect(200)
+    .then((response) => {
+      console.log(response.body)
+      expect(response.body.articles).toEqual([]);
+    });
+
+  })
+  test('GET 200: returns all articles if query is ommitted', () => {
+    return request(app)
+    .get("/api/articles?=")
+    .expect(200)
+    .then(({ body }) => {
+      expect(body.articles.length).toBe(13)
+      body.articles.forEach((article) => {
+        expect(typeof article.author).toBe("string")
+        expect(typeof article.article_id).toBe('number')
+        expect(typeof article.title).toBe("string")
+        expect(typeof article.topic).toBe("string")
+        expect(typeof article.votes).toBe('number')
+        expect(typeof article.created_at).toBe("string")
+        expect(typeof article.article_img_url).toBe( "string")
+        expect(typeof article.comment_count).toBe('number')
+        expect(body.articles).toBeSortedBy('created_at', { descending: true })
+      })
+  })
+
+  })
+})

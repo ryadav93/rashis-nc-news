@@ -19,20 +19,40 @@ exports.selectArticleById = (article_id) => {
       });
     }
 
-    exports.selectArticles = () => {
+    exports.selectArticles = (topic) => {
 
-      const query = (`SELECT articles.author, articles.article_id, articles.title, articles.topic, articles.votes, articles.created_at, articles.article_img_url, CAST(COUNT(comments.comment_id) AS INT) AS comment_count
-      FROM articles 
-      LEFT JOIN comments 
-      ON comments.article_id = articles.article_id 
+    
+     
+    let query = `SELECT articles.author, articles.article_id, articles.title, articles.topic, articles.votes, articles.created_at, articles.article_img_url, CAST(COUNT(comments.comment_id) AS INT) AS comment_count
+     FROM articles 
+     LEFT JOIN comments 
+     ON comments.article_id = articles.article_id`
+     const values = []
+     
+     if(topic) {
+      query += ` WHERE articles.topic = $1
       GROUP BY articles.article_id
-      ORDER BY articles.created_at DESC;`)
+      ORDER BY articles.created_at DESC`
+      values.push(topic)
+     } 
+     
+     else {
+      query += ` GROUP BY articles.article_id
+      ORDER BY articles.created_at DESC`
+     }
+
     return db
-    .query(query)
+    .query(query, values)
     .then(({ rows }) => {
+      // if(rows.length===0){
+      //   return Promise.reject({ status: 404, msg: 'Topic not found' })
+      // } else {
       return rows;
+    
+    // }
     });
-    }
+   }
+
 
   exports.selectCommentsByArticleId = (article_id) => {
     return db
