@@ -405,6 +405,7 @@ describe('/api/articles/?=:topic)', () => {
     });
 
   })
+
   test('GET 200: returns all articles if query is ommitted', () => {
     return request(app)
     .get("/api/articles?=")
